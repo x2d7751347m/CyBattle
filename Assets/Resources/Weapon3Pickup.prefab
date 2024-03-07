@@ -519,7 +519,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8850173494093905090}
-  - component: {fileID: 7158024127200319411}
   - component: {fileID: 4054797824945491845}
   - component: {fileID: 8806441394624426030}
   - component: {fileID: 6383738467330333508}
@@ -554,27 +553,6 @@ Transform:
   - {fileID: 8306929824500276761}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7158024127200319411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6684870144074344426}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 4054797824945491845}
-  _networkObjectCache: {fileID: 4054797824945491845}
-  IgnoredParameters: []
-  _animator: {fileID: 0}
-  _smoothFloats: 1
-  _interpolation: 2
-  _clientAuthoritative: 1
-  _sendToOwner: 0
 --- !u!114 &4054797824945491845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,7 +569,7 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
-  - {fileID: 7158024127200319411}
+  - {fileID: 0}
   - {fileID: -8550995578967243817}
   - {fileID: 1695400941824143218}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
