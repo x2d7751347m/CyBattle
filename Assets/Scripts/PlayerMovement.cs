@@ -10,6 +10,8 @@ using System.Threading;
 public class PlayerMovemont : NetworkBehaviour
 {
     [SerializeField]
+    private long _userId;
+    [SerializeField]
     private float _moveSpeed = 7f;
     [SerializeField]
     private float _rotateSpeed = 100.0f;
@@ -44,10 +46,11 @@ public class PlayerMovemont : NetworkBehaviour
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
         if (_isJumpPressed && _canJump == true)
         {
-            _isJumpPressed = false;
-            _canJump = false;
-            _rb.AddForce(Vector3.up * 300 * Time.deltaTime, ForceMode.VelocityChange);
-            StartCoroutine(JumpAgain());
+            //_isJumpPressed = false;
+            //_canJump = false;
+            //_rb.AddForce(Vector3.up * 300 * Time.deltaTime, ForceMode.VelocityChange);
+            //StartCoroutine(JumpAgain());
+            UpdateJumpServer(_isJumpPressed, _canJump);
         }
         if (Input.GetAxis("Mouse X") != 0 || movement != Vector3.zero)
         {
@@ -55,7 +58,7 @@ public class PlayerMovemont : NetworkBehaviour
         }
         if (movement != Vector3.zero)
         {
-            UpdateAnimationServer(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            UpdateAnimationLocal(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
         }
         //UpdateJumpServer(Input.GetButtonDown("Jump"), canJump);
     }
@@ -103,6 +106,12 @@ public class PlayerMovemont : NetworkBehaviour
         _anim.SetFloat("BlendH", horizontal);
     }
 
+    public void UpdateAnimationLocal(float vertical, float horizontal)
+    {
+        _anim.SetFloat("BlendV", vertical);
+        _anim.SetFloat("BlendH", horizontal);
+    }
+
     public void UpdateMovementLocal(float vertical, float horizontal, float mouseX, Quaternion rotation)
     {
         _rb.MoveRotation(_rb.rotation * rotation);
@@ -122,9 +131,14 @@ public class PlayerMovemont : NetworkBehaviour
     {
         if (jump && canJump == true)
         {
-            canJump = false;
-            _rb.AddForce(Vector3.up * 300 * Time.deltaTime, ForceMode.VelocityChange);
+            _isJumpPressed = false;
+            _canJump = false;
+            _rb.AddForce(Vector3.up * 100 * Time.deltaTime, ForceMode.VelocityChange);
             StartCoroutine(JumpAgain());
         }
+    }
+    public void SetUserId(long userId)
+    {
+        _userId = userId;
     }
 }
