@@ -525,6 +525,7 @@ GameObject:
   - component: {fileID: 638429891999128239}
   - component: {fileID: -8550995578967243817}
   - component: {fileID: 1695400941824143218}
+  - component: {fileID: 7893424153547733703}
   m_Layer: 0
   m_Name: Weapon3Pickup
   m_TagString: Untagged
@@ -569,9 +570,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   _networkBehaviours:
-  - {fileID: 0}
   - {fileID: -8550995578967243817}
   - {fileID: 1695400941824143218}
+  - {fileID: 7893424153547733703}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -610,7 +611,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -630,7 +631,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -745,7 +746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448379db8e693ca4ba7c25929fd1c292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 1
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 4054797824945491845}
   _networkObjectCache: {fileID: 4054797824945491845}
   _speed: 20
@@ -761,7 +762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 4054797824945491845}
   _networkObjectCache: {fileID: 4054797824945491845}
   _componentConfiguration: 0
@@ -794,3 +795,20 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &7893424153547733703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684870144074344426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33344152ec9cb64c987e33ec6bd1baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 4054797824945491845}
+  _networkObjectCache: {fileID: 4054797824945491845}
+  _audioPlayer: {fileID: 0}
+  _weapon: {fileID: 6684870144074344426}

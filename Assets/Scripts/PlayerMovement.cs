@@ -46,10 +46,8 @@ public class PlayerMovemont : NetworkBehaviour
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
         if (_isJumpPressed && _canJump == true)
         {
-            //_isJumpPressed = false;
-            //_canJump = false;
-            //_rb.AddForce(Vector3.up * 300 * Time.deltaTime, ForceMode.VelocityChange);
-            //StartCoroutine(JumpAgain());
+            Jump();
+            StartCoroutine(JumpAgain());
             UpdateJumpServer(_isJumpPressed, _canJump);
         }
         if (Input.GetAxis("Mouse X") != 0 || movement != Vector3.zero)
@@ -126,16 +124,21 @@ public class PlayerMovemont : NetworkBehaviour
         UpdateJump(jump, canJump);
     }
 
-    [ObserversRpc]
+    [ObserversRpc(ExcludeOwner = true, ExcludeServer = true)]
     public void UpdateJump(bool jump, bool canJump)
     {
         if (jump && canJump == true)
         {
-            _isJumpPressed = false;
-            _canJump = false;
-            _rb.AddForce(Vector3.up * 70 * Time.deltaTime, ForceMode.VelocityChange);
+            Jump();
             StartCoroutine(JumpAgain());
         }
+    }
+
+    void Jump()
+    {
+        _isJumpPressed = false;
+        _canJump = false;
+        _rb.AddForce(Vector3.up * 400 * Time.deltaTime, ForceMode.VelocityChange);
     }
     public void SetUserId(long userId)
     {
