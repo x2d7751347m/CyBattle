@@ -73,7 +73,7 @@ public class PlayerMovemont : NetworkBehaviour
 
     IEnumerator JumpAgain()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         _canJump = true;
     }
 
@@ -133,7 +133,7 @@ public class PlayerMovemont : NetworkBehaviour
         {
             _isJumpPressed = false;
             _canJump = false;
-            _rb.AddForce(Vector3.up * 100 * Time.deltaTime, ForceMode.VelocityChange);
+            _rb.AddForce(Vector3.up * 70 * Time.deltaTime, ForceMode.VelocityChange);
             StartCoroutine(JumpAgain());
         }
     }
