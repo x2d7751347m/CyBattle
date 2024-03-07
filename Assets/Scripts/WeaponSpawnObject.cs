@@ -10,11 +10,19 @@ public class WeaponSpawnObject : NetworkBehaviour
     [SerializeField]
     private GameObject[] _objWeaponsToSpawn;
     [SerializeField]
-    private GameObject[] _spawnedWeaponObjects;
+    private List<GameObject> _spawnPoint;
     [SerializeField]
-    private GameObject[] _spawnPoint;
+    private List<GameObject> _spawnedPoints;
     [SerializeField]
     private float _canSpawn = 0, _spawnRate = 30;
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        //foreach (GameObject obj in _spawnPoint)
+        //{
+        //    _spawnedPoints.Add(false);
+        //}
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -34,10 +42,13 @@ public class WeaponSpawnObject : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.time > _canSpawn)
+        if(Time.time > _canSpawn && _spawnPoint.Count != 0)
         {
             _canSpawn = Time.time + _spawnRate;
-            GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[Random.Range(0, _spawnPoint.Length)].transform.position, Quaternion.identity);
+            var spawnPointNumber = Random.Range(0, _spawnPoint.Count);
+            _spawnedPoints.Add(_spawnPoint[spawnPointNumber]);
+            GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
+            _spawnPoint.RemoveAt(spawnPointNumber);
             ServerManager.Spawn(weaponSpawned);
         }
     }
@@ -46,7 +57,7 @@ public class WeaponSpawnObject : NetworkBehaviour
     void SpawnWeapon()
     {
         _canSpawn = Time.time + _spawnRate;
-        GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[Random.Range(0, _spawnPoint.Length)].transform.position, Quaternion.identity);
+        GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[Random.Range(0, _spawnPoint.Count)].transform.position, Quaternion.identity);
         ServerManager.Spawn(weaponSpawned);
         SetSpawnWeapon(weaponSpawned, this);
     }
