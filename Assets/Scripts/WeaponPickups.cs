@@ -11,6 +11,8 @@ public class WeaponPickups : NetworkBehaviour
     private AudioSource _audioPlayer;
     [SerializeField]
     private GameObject _weapon;
+    [SerializeField]
+    private int _weaponType = 1;
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -48,7 +50,14 @@ public class WeaponPickups : NetworkBehaviour
     [ObserversRpc]
     void PlayPickupAudio()
     {
-        Destroy(GetComponent<Renderer>());
+        if (_weaponType == 1)
+        {
+            Destroy(GetComponent<Renderer>());
+        }
+        else
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
         Destroy(GetComponent<Collider>());
         _audioPlayer.Play();
     }
