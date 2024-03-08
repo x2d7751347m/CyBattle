@@ -10,9 +10,7 @@ public class WeaponSpawnObject : NetworkBehaviour
     [SerializeField]
     private GameObject[] _objWeaponsToSpawn;
     [SerializeField]
-    private List<GameObject> _spawnPoint;
-    [SerializeField]
-    private List<GameObject> _spawnedPoints;
+    public List<GameObject> spawnPoint;
     [SerializeField]
     private float _canSpawn = 0, _spawnRate = 30;
     public override void OnStartClient()
@@ -28,14 +26,14 @@ public class WeaponSpawnObject : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Time.time > _canSpawn && _spawnPoint.Count != 0)
+        if(Time.time > _canSpawn && spawnPoint.Count != 0)
         {
             _canSpawn = Time.time + _spawnRate;
-            var spawnPointNumber = Random.Range(0, _spawnPoint.Count);
-            _spawnedPoints.Add(_spawnPoint[spawnPointNumber]);
-            GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
-            _spawnPoint.RemoveAt(spawnPointNumber);
+            var spawnPointNumber = Random.Range(0, spawnPoint.Count);
+            GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
             ServerManager.Spawn(weaponSpawned);
+            weaponSpawned.GetComponent<WeaponPickups>().SetSpawnPoint(spawnPoint[spawnPointNumber]);
+            spawnPoint.RemoveAt(spawnPointNumber);
         }
     }
 
@@ -43,10 +41,10 @@ public class WeaponSpawnObject : NetworkBehaviour
     void SpawnWeapon()
     {
         _canSpawn = Time.time + _spawnRate;
-        var spawnPointNumber = Random.Range(0, _spawnPoint.Count);
-        _spawnedPoints.Add(_spawnPoint[spawnPointNumber]);
-        GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], _spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
-        _spawnPoint.RemoveAt(spawnPointNumber);
+        var spawnPointNumber = Random.Range(0, spawnPoint.Count);
+        GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
         ServerManager.Spawn(weaponSpawned);
+        weaponSpawned.GetComponent<WeaponPickups>().SetSpawnPoint(spawnPoint[spawnPointNumber]);
+        spawnPoint.RemoveAt(spawnPointNumber);
     }
 }

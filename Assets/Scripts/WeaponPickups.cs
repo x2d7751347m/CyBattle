@@ -13,15 +13,19 @@ public class WeaponPickups : NetworkBehaviour
     private GameObject _weapon;
     [SerializeField]
     private int _weaponType = 1;
+    [SerializeField]
+    private GameObject _spawnPoint;
+    [SerializeField]
+    private GameObject _spawnManager;
     public override void OnStartServer()
     {
         base.OnStartServer();
-        _audioPlayer = GetComponent<AudioSource>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        _audioPlayer = GetComponent<AudioSource>();
+        _spawnManager = GameObject.Find("SpawnManager");
     }
 
     // Update is called once per frame
@@ -30,14 +34,17 @@ public class WeaponPickups : NetworkBehaviour
         
     }
 
+    public void SetSpawnPoint(GameObject point)
+    {
+        _spawnPoint = point;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             PlayPickupAudioServer();
             TurnOffServer();
-
-
         }
     }
 
@@ -70,7 +77,8 @@ public class WeaponPickups : NetworkBehaviour
 
     IEnumerator TurnOffRoutine()
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(2.0f);
+        _spawnManager.GetComponent<WeaponSpawnObject>().spawnPoint.Add(_spawnPoint);
         ServerManager.Despawn(_weapon);
     }
 

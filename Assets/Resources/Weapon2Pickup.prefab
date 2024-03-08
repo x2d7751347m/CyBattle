@@ -2270,7 +2270,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 9120417445051770493}
   _networkObjectCache: {fileID: 9120417445051770493}
-  _componentConfiguration: 0
+  _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
     Position: 1
@@ -2318,6 +2318,8 @@ MonoBehaviour:
   _audioPlayer: {fileID: 0}
   _weapon: {fileID: 6781574570526910485}
   _weaponType: 2
+  _spawnPoint: {fileID: 0}
+  _spawnManager: {fileID: 0}
 --- !u!1 &6922456573554317655
 GameObject:
   m_ObjectHideFlags: 0

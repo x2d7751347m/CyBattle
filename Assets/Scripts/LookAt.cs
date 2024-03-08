@@ -13,6 +13,12 @@ public class LookAt : NetworkBehaviour
     private Vector3 _screenPosition;
     [SerializeField]
     private GameObject _crosshair;
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+            gameObject.GetComponent<LookAt>().enabled = false;
+            _crosshair.GetComponent<Image>().enabled = false;
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();

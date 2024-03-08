@@ -13,6 +13,11 @@ public class AimLookAtRef : NetworkBehaviour
     private RigBuilder _rig;
     [SerializeField]
     private GameObject _lookAtObject;
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        gameObject.GetComponent<AimLookAtRef>().enabled = false;
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();

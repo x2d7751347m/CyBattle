@@ -797,7 +797,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 4054797824945491845}
   _networkObjectCache: {fileID: 4054797824945491845}
-  _componentConfiguration: 0
+  _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
     Position: 1
@@ -845,3 +845,5 @@ MonoBehaviour:
   _audioPlayer: {fileID: 0}
   _weapon: {fileID: 6684870144074344426}
   _weaponType: 3
+  _spawnPoint: {fileID: 0}
+  _spawnManager: {fileID: 0}

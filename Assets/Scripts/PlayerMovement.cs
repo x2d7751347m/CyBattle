@@ -22,11 +22,15 @@ public class PlayerMovemont : NetworkBehaviour
     private bool _canJump = true;
     private bool _isJumpPressed = false;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+            gameObject.GetComponent<PlayerMovemont>().enabled = false;
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
-        //_rb = GetComponent<Rigidbody>();
-        //_anim = GetComponent<Animator>();
         if (base.IsOwner)
         {
         }
@@ -46,9 +50,9 @@ public class PlayerMovemont : NetworkBehaviour
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
         if (_isJumpPressed && _canJump == true)
         {
+
             Jump();
             StartCoroutine(JumpAgain());
-            UpdateJumpServer(_isJumpPressed, _canJump);
         }
         if (Input.GetAxis("Mouse X") != 0 || movement != Vector3.zero)
         {
@@ -58,12 +62,11 @@ public class PlayerMovemont : NetworkBehaviour
         {
             UpdateAnimationLocal(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
         }
-        //UpdateJumpServer(Input.GetButtonDown("Jump"), canJump);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && _canJump)
         {
             _isJumpPressed = true;
         }
@@ -124,7 +127,7 @@ public class PlayerMovemont : NetworkBehaviour
         UpdateJump(jump, canJump);
     }
 
-    [ObserversRpc(ExcludeOwner = true, ExcludeServer = true)]
+    [ObserversRpc]
     public void UpdateJump(bool jump, bool canJump)
     {
         if (jump && canJump == true)
@@ -138,7 +141,7 @@ public class PlayerMovemont : NetworkBehaviour
     {
         _isJumpPressed = false;
         _canJump = false;
-        _rb.AddForce(Vector3.up * 400 * Time.deltaTime, ForceMode.VelocityChange);
+        _rb.AddForce(Vector3.up * 500 * Time.deltaTime, ForceMode.VelocityChange);
     }
     public void SetUserId(long userId)
     {
