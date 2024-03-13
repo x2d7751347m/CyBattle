@@ -10875,7 +10875,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &6224436029971706799
 CapsuleCollider:
@@ -10916,7 +10916,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 3050575885658769900}
   _networkObjectCache: {fileID: 3050575885658769900}
   _userId: 0
-  _moveSpeed: 7
+  _moveSpeed: 10
   _rotateSpeed: 100
   _rb: {fileID: 3744296735791676181}
   _anim: {fileID: 1195729614304633711}

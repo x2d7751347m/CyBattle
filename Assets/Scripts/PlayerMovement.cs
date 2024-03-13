@@ -12,7 +12,7 @@ public class PlayerMovemont : NetworkBehaviour
     [SerializeField]
     private long _userId;
     [SerializeField]
-    private float _moveSpeed = 7f;
+    private float _moveSpeed = 10f;
     [SerializeField]
     private float _rotateSpeed = 100.0f;
     [SerializeField]
