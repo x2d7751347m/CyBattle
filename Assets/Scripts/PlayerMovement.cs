@@ -22,11 +22,6 @@ public class PlayerMovemont : NetworkBehaviour
     private bool _canJump = true;
     private bool _isJumpPressed = false;
 
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-            gameObject.GetComponent<PlayerMovemont>().enabled = false;
-    }
 
     public override void OnStartClient()
     {
