@@ -23,6 +23,7 @@ using FishNet.Component.ColliderRollback;
 using FishNet.Managing.Predicting;
 using System.Runtime.CompilerServices;
 using GameKit.Utilities;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using FishNet.Editing.PrefabCollectionGenerator;
 #endif

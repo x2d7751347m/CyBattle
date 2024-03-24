@@ -6,11 +6,10 @@ using FishNet.Object;
 using FishNet.Example.ColliderRollbacks;
 using UnityEngine.UIElements;
 using System.Threading;
+using UnityEngine.Serialization;
 
-public class PlayerMovemont : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
-    [SerializeField]
-    private long _userId;
     [SerializeField]
     private float _moveSpeed = 10f;
     [SerializeField]
@@ -20,23 +19,15 @@ public class PlayerMovemont : NetworkBehaviour
     [SerializeField]
     private Animator _anim;
     private bool _canJump = true;
-    private bool _isJumpPressed = false;
-
+    private bool _isJumpPressed;
 
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (base.IsOwner)
+        if (!IsOwner)
         {
+            gameObject.GetComponent<PlayerMovement>().enabled = false;
         }
-        else
-        {
-            gameObject.GetComponent<PlayerMovemont>().enabled = false;
-        }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
     }
 
     // Update is called once per frame
@@ -137,9 +128,5 @@ public class PlayerMovemont : NetworkBehaviour
         _isJumpPressed = false;
         _canJump = false;
         _rb.AddForce(Vector3.up * 500 * Time.deltaTime, ForceMode.VelocityChange);
-    }
-    public void SetUserId(long userId)
-    {
-        _userId = userId;
     }
 }

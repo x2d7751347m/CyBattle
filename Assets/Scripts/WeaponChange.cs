@@ -6,6 +6,8 @@ using Cinemachine;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Example.ColliderRollbacks;
+using TMPro;
+using UnityEngine.UI;
 
 public class WeaponChange : NetworkBehaviour
 {
@@ -30,16 +32,26 @@ public class WeaponChange : NetworkBehaviour
     [SerializeField]
     private GameObject[] _weapons;
     private int _weaponNumber = 0;
+    private Image _weaponIcon;
+    private TMP_Text _ammoAmtText;
+    [SerializeField]
+    private Sprite[] _weaponIcons;
+    [SerializeField]
+    private int[] _ammoAmts;
 
     public override void OnStartClient()
     {
         base.OnStartClient();
         if (base.IsOwner)
         {
+            _weaponIcon = GameObject.Find("WeaponUI").GetComponent<Image>();
+            _ammoAmtText = GameObject.Find("AmmoAmt").GetComponent<TMP_Text>();
             _camObject = GameObject.Find("PlayerCam");
             _cam = _camObject.GetComponent<CinemachineVirtualCamera>();
-            _cam.Follow = this.gameObject.transform;
-            _cam.LookAt = this.gameObject.transform;
+            var o = gameObject;
+            _cam.Follow = o.transform;
+            _cam.LookAt = o.transform;
+            _ammoAmtText.text = _ammoAmts[0].ToString();
         }
         else
         {
@@ -52,39 +64,40 @@ public class WeaponChange : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(1))
         {
-            UpdateWeaponChangeServer(Input.GetMouseButtonDown(1));
+            UpdateWeaponChangeServer();
         }
     }
 
     [ServerRpc]
-    public void UpdateWeaponChangeServer(bool mouseButtonDown1)
+    private void UpdateWeaponChangeServer()
     {
-        UpdateWeaponChange(mouseButtonDown1);
+        UpdateWeaponChange();
     }
 
-    [ObserversRpc]
-    public void UpdateWeaponChange(bool mouseButtonDown1)
+    [ObserversRpc(BufferLast = true)]
+    private void UpdateWeaponChange()
     {
-        if (mouseButtonDown1)
+        _weaponNumber++;
+        if (_weaponNumber > _weapons.Length - 1)
         {
-            _weaponNumber++;
-            if (_weaponNumber > _weapons.Length - 1)
-            {
-                _weaponNumber = 0;
-            }
-            for (int i = 0; i < _weapons.Length; i++)
-            {
-                _weapons[i].SetActive(false);
-            }
-            _weapons[_weaponNumber].SetActive(true);
-            _leftHand.data.target = _leftTargets[_weaponNumber];
-            _rightHand.data.target = _rightTargets[_weaponNumber];
-            _leftThumb.data.target = _thumbTargets[_weaponNumber];
-            _rig.Build();
+            _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[0];
+            _ammoAmtText.text = _ammoAmts[0].ToString();
+            _weaponNumber = 0;
         }
+        foreach (var t in _weapons)
+        {
+            t.SetActive(false);
+        }
+        _weapons[_weaponNumber].SetActive(true);
+        _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[_weaponNumber];
+        _ammoAmtText.text = _ammoAmts[_weaponNumber].ToString();
+        _leftHand.data.target = _leftTargets[_weaponNumber];
+        _rightHand.data.target = _rightTargets[_weaponNumber];
+        _leftThumb.data.target = _thumbTargets[_weaponNumber];
+        _rig.Build();
     }
 }

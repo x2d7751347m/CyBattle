@@ -4,6 +4,8 @@ using UnityEngine;
 using FishNet.Connection;
 using FishNet.Object;
 using Cinemachine;
+using FishNet;
+using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Animations.Rigging;
 
@@ -17,7 +19,7 @@ public class LookAt : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (base.IsOwner)
+        if (IsOwner)
         {
             Cursor.visible = false;
         }

@@ -4,6 +4,8 @@ using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using SceneManager = UnityEngine.SceneManagement.SceneManager;
+
 namespace FishNet.Example
 {
     public class NetworkHudCanvases : MonoBehaviour
@@ -224,10 +226,7 @@ namespace FishNet.Example
                 _networkManager.ClientManager.StopConnection();
             else
             {
-                _networkManager.ClientManager.StartConnection();
-                SceneLoadData sld = new SceneLoadData("Floor layout");
-                sld.ReplaceScenes = ReplaceOption.OnlineOnly;
-                _networkManager.SceneManager.LoadGlobalScenes(sld);
+                SceneManager.LoadScene(1);
             }
 
             DeselectButtons();
