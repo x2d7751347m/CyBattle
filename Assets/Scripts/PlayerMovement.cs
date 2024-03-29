@@ -6,20 +6,19 @@ using FishNet.Object;
 using FishNet.Example.ColliderRollbacks;
 using UnityEngine.UIElements;
 using System.Threading;
+using FishNet;
 using UnityEngine.Serialization;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    [SerializeField]
-    private float _moveSpeed = 10f;
-    [SerializeField]
-    private float _rotateSpeed = 100.0f;
-    [SerializeField]
-    private Rigidbody _rb;
-    [SerializeField]
-    private Animator _anim;
+    [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _rotateSpeed = 100.0f;
+    [SerializeField] private Rigidbody _rb;
+    [SerializeField] private Animator _anim;
     private bool _canJump = true;
     private bool _isJumpPressed;
+    public bool IsDead;
+    private Vector3 _startPos;
 
     public override void OnStartClient()
     {
@@ -33,17 +32,20 @@ public class PlayerMovement : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (IsDead) return;
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
         if (_isJumpPressed && _canJump == true)
         {
-
             Jump();
             StartCoroutine(JumpAgain());
         }
+
         if (Input.GetAxis("Mouse X") != 0 || movement != Vector3.zero)
         {
-            UpdateMovementLocal(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Mouse X"), Quaternion.Euler(new Vector3(0, Input.GetAxis("Mouse X") * _rotateSpeed * Time.deltaTime, 0)));
+            UpdateMovementLocal(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), Input.GetAxis("Mouse X"),
+                Quaternion.Euler(new Vector3(0, Input.GetAxis("Mouse X") * _rotateSpeed * Time.deltaTime, 0)));
         }
+
         if (movement != Vector3.zero)
         {
             UpdateAnimationLocal(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
@@ -52,6 +54,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
+        if (IsDead) return;
         if (Input.GetKeyDown(KeyCode.Space) && _canJump)
         {
             _isJumpPressed = true;
@@ -74,7 +77,8 @@ public class PlayerMovement : NetworkBehaviour
     public void UpdateMovement(float vertical, float horizontal, float mouseX, Quaternion rotation)
     {
         _rb.MoveRotation(_rb.rotation * rotation);
-        _rb.MovePosition(_rb.position + transform.forward * vertical * _moveSpeed * Time.deltaTime + transform.right * horizontal * _moveSpeed * Time.deltaTime);
+        _rb.MovePosition(_rb.position + transform.forward * vertical * _moveSpeed * Time.deltaTime +
+                         transform.right * horizontal * _moveSpeed * Time.deltaTime);
         _anim.SetFloat("BlendV", vertical);
         _anim.SetFloat("BlendH", horizontal);
     }
@@ -102,7 +106,8 @@ public class PlayerMovement : NetworkBehaviour
     public void UpdateMovementLocal(float vertical, float horizontal, float mouseX, Quaternion rotation)
     {
         _rb.MoveRotation(_rb.rotation * rotation);
-        _rb.MovePosition(_rb.position + transform.forward * vertical * _moveSpeed * Time.deltaTime + transform.right * horizontal * _moveSpeed * Time.deltaTime);
+        _rb.MovePosition(_rb.position + transform.forward * vertical * _moveSpeed * Time.deltaTime +
+                         transform.right * horizontal * _moveSpeed * Time.deltaTime);
         //anim.SetFloat("BlendV", vertical);
         //anim.SetFloat("BlendH", horizontal);
     }

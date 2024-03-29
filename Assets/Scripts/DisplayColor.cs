@@ -10,6 +10,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class DisplayColor : NetworkBehaviour
 {
@@ -18,6 +19,14 @@ public class DisplayColor : NetworkBehaviour
     private GameObject _namesObject;
 
     private int? _namesAt;
+
+    public AudioClip[] GunShotSounds;
+    private static readonly int Hit = Animator.StringToHash("Hit");
+    private static readonly int Death = Animator.StringToHash("Death");
+    
+    public bool IsDead;
+    private bool _respawned;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -33,11 +42,129 @@ public class DisplayColor : NetworkBehaviour
             ChooseColor(gameManager.PlayerNickName, gameManager.PlayerColor);
         }
     }
-    
+
     public override void OnStartServer()
     {
         base.OnStartServer();
         _namesObject = GameObject.Find("namesBG");
+    }
+
+    private void Update()
+    {
+        if (GetComponent<Animator>().GetBool(Hit))
+        {
+            StartCoroutine(Recover());
+        }
+
+        if (IsDead && !_respawned)
+        {
+            _respawned = true;
+            StartCoroutine(RespawnWait());
+        }
+    }
+
+    public void Respawn()
+    {
+                GetComponent<Animator>().SetBool(Death, false);
+    }
+
+    public void ResetForReplay()
+    {
+        var name = InstanceFinder.NetworkManager.GetComponent<GameManager>().PlayerNickName;
+        for (var i = 0; i < _namesObject.GetComponent<NickNamesScript>().Names.Length; i++)
+        {
+            if (name != _namesObject.GetComponent<NickNamesScript>().Names[i].text) continue;
+
+            IsDead = false;
+            gameObject.GetComponent<PlayerMovement>().IsDead = false;
+            gameObject.GetComponent<WeaponChange>().IsDead = false;
+            _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
+                .fillAmount = 1;
+            // na
+            if (IsOwner)
+            {
+                gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void ResetForReplayServer()
+    {
+        // ResetForReplayObserver();
+    }
+
+    [ObserversRpc]
+    private void ResetForReplayObserver()
+    {
+        ResetForReplay();
+    }
+    
+    IEnumerator Recover()
+    {
+        yield return new WaitForSeconds(0.03f);
+        if (IsOwner)
+        {
+            GetComponent<Animator>().SetBool(Hit, false);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DeliverDamage(string name, float damageAmt)
+    {
+        // GunDamage(name, damageAmt);
+        GunDamageObserver(name, damageAmt);
+    }
+
+    [ObserversRpc(ExcludeServer = true)]
+    private void GunDamageObserver(string name, float damageAmt)
+    {
+        GunDamage(name, damageAmt);
+    }
+
+    public void GunDamage(string name, float damageAmt)
+    {
+        for (var i = 0; i < _namesObject.GetComponent<NickNamesScript>().Names.Length; i++)
+        {
+            if (name != _namesObject.GetComponent<NickNamesScript>().Names[i].text) continue;
+            if (_namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
+                    .fillAmount>0)
+            {
+                if (IsOwner)
+                {
+                    GetComponent<Animator>().SetBool(Hit, true);
+                }
+                _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
+                    .fillAmount -= damageAmt;
+            }
+            else
+            {
+                _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
+                    .fillAmount -= 0;
+                if (IsOwner)
+                {
+                    GetComponent<Animator>().SetBool(Death, true);
+                }
+
+                gameObject.GetComponent<PlayerMovement>().IsDead = true;
+                IsDead = true;
+                gameObject.GetComponent<WeaponChange>().IsDead = true;
+            }
+        }
+    }
+    
+
+    IEnumerator RespawnWait()
+    {
+        yield return new WaitForSeconds(3);
+        IsDead = false;
+        gameObject.GetComponent<PlayerMovement>().IsDead = false;
+        gameObject.GetComponent<WeaponChange>().IsDead = false;
+        _respawned = false;
+        var spawnPoints = GameObject.Find("SpawnPoints");
+        transform.position = spawnPoints.transform.GetChild(Random.Range(0, spawnPoints.transform.childCount)).position;
+        GetComponent<DisplayColor>().Respawn();
+        ResetForReplayServer();
     }
 
     private void ChooseColor(string nickname, int playerColor)
@@ -63,6 +190,24 @@ public class DisplayColor : NetworkBehaviour
     private void AssignColor(int playerColor)
     {
         transform.GetChild(1).GetComponent<Renderer>().material.color = Colors[playerColor];
+    }
+
+    public void PlayGunShot(int weaponNumber)
+    {
+        GetComponent<AudioSource>().clip = GunShotSounds[weaponNumber];
+        GetComponent<AudioSource>().Play();
+    }
+
+    [ServerRpc]
+    public void PlayGunShotServer(int weaponNumber)
+    {
+        PlayGunShotObserver(weaponNumber);
+    }
+
+    [ObserversRpc(ExcludeOwner = true, ExcludeServer = true)]
+    private void PlayGunShotObserver(int weaponNumber)
+    {
+        PlayGunShot(weaponNumber);
     }
 
     [ObserversRpc]
@@ -94,7 +239,8 @@ public class DisplayColor : NetworkBehaviour
         if (_namesObject.GetComponent<NickNamesScript>().Names.Any(tmpText => tmpText.enabled))
         {
             FetchNames(Owner, _namesObject.GetComponent<NickNamesScript>().Names.Select(a =>
-                a.text).ToArray(), _namesObject.GetComponent<NickNamesScript>().HealthBars.Select(a => a.color).ToArray());
+                    a.text).ToArray(),
+                _namesObject.GetComponent<NickNamesScript>().HealthBars.Select(a => a.color).ToArray());
         }
     }
 
