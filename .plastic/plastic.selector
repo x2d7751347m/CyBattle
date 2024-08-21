@@ -1,4 +1,0 @@
-repository "CyBattle@Jiwon_Min@cloud"
-  path "/"
-    br "/main"
-    co "/main"

@@ -141,8 +141,11 @@ public class WeaponChange : NetworkBehaviour
         _weaponNumber++;
         if (_weaponNumber > _weapons.Length - 1)
         {
-            _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[0];
-            _ammoAmtText.text = _ammoAmts[0].ToString();
+            if (IsOwner)
+            {
+                _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[0];
+                _ammoAmtText.text = _ammoAmts[0].ToString();
+            }
             _weaponNumber = 0;
         }
 
@@ -152,8 +155,12 @@ public class WeaponChange : NetworkBehaviour
         }
 
         _weapons[_weaponNumber].SetActive(true);
-        _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[_weaponNumber];
-        _ammoAmtText.text = _ammoAmts[_weaponNumber].ToString();
+        
+        if (IsOwner)
+        {
+            _weaponIcon.GetComponent<Image>().sprite = _weaponIcons[_weaponNumber];
+            _ammoAmtText.text = _ammoAmts[_weaponNumber].ToString();
+        }
         _leftHand.data.target = _leftTargets[_weaponNumber];
         _rightHand.data.target = _rightTargets[_weaponNumber];
         _leftThumb.data.target = _thumbTargets[_weaponNumber];

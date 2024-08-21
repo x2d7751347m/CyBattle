@@ -20,6 +20,8 @@ public class PlayerMovement : NetworkBehaviour
     public bool IsDead;
     private Vector3 _startPos;
 
+    private readonly float _jumpVelocity = 5;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -132,6 +134,10 @@ public class PlayerMovement : NetworkBehaviour
     {
         _isJumpPressed = false;
         _canJump = false;
-        _rb.AddForce(Vector3.up * 500 * Time.deltaTime, ForceMode.VelocityChange);
+        
+        var velocity1 = _rb.velocity;
+        velocity1 = new Vector3(velocity1.x, _jumpVelocity, velocity1.z);
+        _rb.velocity = velocity1;
+        // _rb.AddForce(Vector3.up * 500 * Time.deltaTime, ForceMode.VelocityChange);
     }
 }
