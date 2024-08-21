@@ -68,12 +68,12 @@ public class DisplayColor : NetworkBehaviour
                 GetComponent<Animator>().SetBool(Death, false);
     }
 
-    public void ResetForReplay()
+    public void ResetForReplay(string playerName)
     {
-        var name = InstanceFinder.NetworkManager.GetComponent<GameManager>().PlayerNickName;
+        // var myName = InstanceFinder.NetworkManager.GetComponent<GameManager>().PlayerNickName;
         for (var i = 0; i < _namesObject.GetComponent<NickNamesScript>().Names.Length; i++)
         {
-            if (name != _namesObject.GetComponent<NickNamesScript>().Names[i].text) continue;
+            if (playerName != _namesObject.GetComponent<NickNamesScript>().Names[i].text) continue;
 
             IsDead = false;
             gameObject.GetComponent<PlayerMovement>().IsDead = false;
@@ -89,15 +89,15 @@ public class DisplayColor : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void ResetForReplayServer()
+    public void ResetForReplayServer(string playerName)
     {
-        // ResetForReplayObserver();
+        ResetForReplayObserver(playerName);
     }
 
     [ObserversRpc]
-    private void ResetForReplayObserver()
+    private void ResetForReplayObserver(string playerName)
     {
-        ResetForReplay();
+        ResetForReplay(playerName);
     }
     
     IEnumerator Recover()
@@ -164,7 +164,8 @@ public class DisplayColor : NetworkBehaviour
         var spawnPoints = GameObject.Find("SpawnPoints");
         transform.position = spawnPoints.transform.GetChild(Random.Range(0, spawnPoints.transform.childCount)).position;
         GetComponent<DisplayColor>().Respawn();
-        ResetForReplayServer();
+        var myName = InstanceFinder.NetworkManager.GetComponent<GameManager>().PlayerNickName;
+        ResetForReplayServer(myName);
     }
 
     private void ChooseColor(string nickname, int playerColor)
