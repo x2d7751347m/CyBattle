@@ -12,35 +12,40 @@ public class WeaponSpawnObject : NetworkBehaviour
     [SerializeField]
     public List<GameObject> spawnPoint;
     [SerializeField]
-    private float _canSpawn = 0, _spawnRate = 30;
+    private float _spawnRate = 30;
     public override void OnStartClient()
     {
         base.OnStartClient();
         gameObject.GetComponent<WeaponSpawnObject>().enabled = false;
     }
-    // Start is called before the first frame update
-    void Start()
+
+    public override void OnStartNetwork()
     {
+        base.OnStartNetwork();
+        StartSpawning();
+    }
+    
+    public void StartSpawning()
+    {
+        StartCoroutine(SpawnWeaponRoutine());
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    IEnumerator SpawnWeaponRoutine()
     {
-        if(Time.fixedTime > _canSpawn && spawnPoint.Count > 0)
+        while (true)
         {
-            _canSpawn = Time.fixedTime + _spawnRate;
             var spawnPointNumber = Random.Range(0, spawnPoint.Count);
             GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
             ServerManager.Spawn(weaponSpawned);
             weaponSpawned.GetComponent<WeaponPickups>().SetSpawnPoint(spawnPoint[spawnPointNumber]);
             spawnPoint.RemoveAt(spawnPointNumber);
+            yield return new WaitForSeconds(_spawnRate);
         }
     }
 
     [ServerRpc]
     void SpawnWeapon()
     {
-        _canSpawn = Time.fixedTime + _spawnRate;
         var spawnPointNumber = Random.Range(0, spawnPoint.Count);
         GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
         ServerManager.Spawn(weaponSpawned);
