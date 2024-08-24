@@ -12,7 +12,11 @@ public class WeaponPickups : NetworkBehaviour
     [SerializeField]
     private GameObject _weapon;
     [SerializeField]
-    private int _weaponType = 1;
+    private bool _consumable = true;
+    [SerializeField]
+    private int _weaponNumber;
+    [SerializeField]
+    private int _amount = 50;
     [SerializeField]
     private GameObject _spawnPoint;
     [SerializeField]
@@ -43,9 +47,15 @@ public class WeaponPickups : NetworkBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AddAmmo(other.GetComponent<WeaponChange>());
             PlayPickupAudioServer();
             TurnOffServer();
         }
+    }
+
+    void AddAmmo(WeaponChange weapon)
+    {
+        weapon.AddAmmo(_weaponNumber, _amount);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -57,7 +67,7 @@ public class WeaponPickups : NetworkBehaviour
     [ObserversRpc]
     void PlayPickupAudio()
     {
-        if (_weaponType == 1)
+        if (_consumable)
         {
             Destroy(GetComponent<Renderer>());
         }

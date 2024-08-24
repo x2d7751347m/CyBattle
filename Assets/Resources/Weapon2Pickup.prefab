@@ -2317,7 +2317,9 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 9120417445051770493}
   _audioPlayer: {fileID: 0}
   _weapon: {fileID: 6781574570526910485}
-  _weaponType: 2
+  _consumable: 1
+  _weaponNumber: 1
+  _amount: 50
   _spawnPoint: {fileID: 0}
   _spawnManager: {fileID: 0}
 --- !u!1 &6922456573554317655

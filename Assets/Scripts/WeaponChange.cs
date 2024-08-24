@@ -178,4 +178,13 @@ public class WeaponChange : NetworkBehaviour
         yield return new WaitForSeconds(0.03f);
         _muzzleFlash[_weaponNumber].SetActive(false);
     }
+
+    public void AddAmmo(int weaponNumber, int ammo)
+    {
+        _ammoAmts[weaponNumber] += ammo;
+        if (_weaponNumber == weaponNumber)
+        {
+            _ammoAmtText.text = _ammoAmts[_weaponNumber].ToString();
+        }
+    }
 }

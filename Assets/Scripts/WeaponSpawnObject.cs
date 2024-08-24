@@ -24,11 +24,11 @@ public class WeaponSpawnObject : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(Time.time > _canSpawn && spawnPoint.Count != 0)
+        if(Time.fixedTime > _canSpawn && spawnPoint.Count > 0)
         {
-            _canSpawn = Time.time + _spawnRate;
+            _canSpawn = Time.fixedTime + _spawnRate;
             var spawnPointNumber = Random.Range(0, spawnPoint.Count);
             GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
             ServerManager.Spawn(weaponSpawned);
@@ -40,7 +40,7 @@ public class WeaponSpawnObject : NetworkBehaviour
     [ServerRpc]
     void SpawnWeapon()
     {
-        _canSpawn = Time.time + _spawnRate;
+        _canSpawn = Time.fixedTime + _spawnRate;
         var spawnPointNumber = Random.Range(0, spawnPoint.Count);
         GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
         ServerManager.Spawn(weaponSpawned);

@@ -15,8 +15,8 @@ public class WeaponRotate : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        transform.Rotate(0, _speed * Time.deltaTime, 0);
+        transform.Rotate(0, _speed * Time.fixedDeltaTime, 0);
     }
 }
