@@ -22,6 +22,10 @@ public class WeaponPickups : NetworkBehaviour
     [SerializeField]
     private GameObject _spawnManager;
     private bool _consumed;
+    [SerializeField]
+    private MeshRenderer _mesh;
+    [SerializeField]
+    private GameObject _meshObject;
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -48,7 +52,14 @@ public class WeaponPickups : NetworkBehaviour
     {
         if (!other.CompareTag("Player") || _consumed) return;
         _consumed = true;
-        GetComponent<MeshRenderer>().enabled = false;
+        if (_mesh != null)
+        {
+            GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            _meshObject.SetActive(false);
+        }
         AddAmmo(other.GetComponent<WeaponChange>());
         PlayPickupAudioServer();
         TurnOffServer();

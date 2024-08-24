@@ -2322,6 +2322,8 @@ MonoBehaviour:
   _amount: 50
   _spawnPoint: {fileID: 0}
   _spawnManager: {fileID: 0}
+  _mesh: {fileID: 0}
+  _meshObject: {fileID: 3652838088680802615}
 --- !u!1 &6922456573554317655
 GameObject:
   m_ObjectHideFlags: 0

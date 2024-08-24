@@ -350,6 +350,10 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 1240630676225918299}
   _audioPlayer: {fileID: 0}
   _weapon: {fileID: 5759705492604998140}
-  _weaponType: 1
+  _consumable: 1
+  _weaponNumber: 0
+  _amount: 50
   _spawnPoint: {fileID: 0}
   _spawnManager: {fileID: 0}
+  _mesh: {fileID: 8934155592348543967}
+  _meshObject: {fileID: 0}

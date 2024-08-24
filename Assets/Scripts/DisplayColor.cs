@@ -156,13 +156,13 @@ public class DisplayColor : NetworkBehaviour
     IEnumerator RespawnWait()
     {
         yield return new WaitForSeconds(3);
+        var spawnPoints = GameObject.Find("SpawnPoints");
+        transform.position = spawnPoints.transform.GetChild(Random.Range(0, spawnPoints.transform.childCount)).position;
+        GetComponent<DisplayColor>().Respawn();
         IsDead = false;
         gameObject.GetComponent<PlayerMovement>().IsDead = false;
         gameObject.GetComponent<WeaponChange>().IsDead = false;
         _respawned = false;
-        var spawnPoints = GameObject.Find("SpawnPoints");
-        transform.position = spawnPoints.transform.GetChild(Random.Range(0, spawnPoints.transform.childCount)).position;
-        GetComponent<DisplayColor>().Respawn();
         var myName = InstanceFinder.NetworkManager.GetComponent<GameManager>().PlayerNickName;
         ResetForReplayServer(myName);
     }

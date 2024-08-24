@@ -72,7 +72,7 @@ public class LookAt : NetworkBehaviour
         }
         else
         {
-            _targetLookAtPosition = _mainCamera.transform.position + ray.direction * _lookAtDistance;
+            _targetLookAtPosition = ray.GetPoint(_lookAtDistance);;
         }
     }
 

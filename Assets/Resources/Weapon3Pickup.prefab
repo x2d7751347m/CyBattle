@@ -849,3 +849,5 @@ MonoBehaviour:
   _amount: 50
   _spawnPoint: {fileID: 0}
   _spawnManager: {fileID: 0}
+  _mesh: {fileID: 0}
+  _meshObject: {fileID: 2774560616369744843}
