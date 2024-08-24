@@ -127,20 +127,19 @@ public class DisplayColor : NetworkBehaviour
         for (var i = 0; i < _namesObject.GetComponent<NickNamesScript>().Names.Length; i++)
         {
             if (name != _namesObject.GetComponent<NickNamesScript>().Names[i].text) continue;
-            if (_namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
-                    .fillAmount>0)
+            var healthBar = _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>();
+            var damageResult = healthBar.fillAmount - damageAmt;
+            if (damageResult>0)
             {
                 if (IsOwner)
                 {
                     GetComponent<Animator>().SetBool(Hit, true);
                 }
-                _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
-                    .fillAmount -= damageAmt;
+                healthBar.fillAmount = damageResult;
             }
             else
             {
-                _namesObject.GetComponent<NickNamesScript>().HealthBars[i].gameObject.GetComponent<Image>()
-                    .fillAmount -= 0;
+                healthBar.fillAmount = 0;
                 if (IsOwner)
                 {
                     GetComponent<Animator>().SetBool(Death, true);

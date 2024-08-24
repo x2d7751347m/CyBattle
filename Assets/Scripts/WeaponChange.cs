@@ -59,6 +59,10 @@ public class WeaponChange : NetworkBehaviour
         }
         else
         {
+            _leftHand.data.target = _leftTargets[_weaponNumber];
+            _rightHand.data.target = _rightTargets[_weaponNumber];
+            _leftThumb.data.target = _thumbTargets[_weaponNumber];
+            _rig.Build();
             gameObject.GetComponent<WeaponChange>().enabled = false;
         }
     }
@@ -84,8 +88,10 @@ public class WeaponChange : NetworkBehaviour
     private void Update()
     {
         if (IsDead) return;
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _ammoAmts[_weaponNumber] > 0)
         {
+            _ammoAmts[_weaponNumber]--;
+            _ammoAmtText.text = _ammoAmts[_weaponNumber].ToString();
             GetComponent<DisplayColor>().PlayGunShot(_weaponNumber);
             GunMuzzleFlash(_weaponNumber);
             GetComponent<DisplayColor>().PlayGunShotServer(_weaponNumber);

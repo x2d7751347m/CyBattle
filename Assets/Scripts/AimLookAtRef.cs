@@ -10,15 +10,12 @@ using UnityEngine.UIElements;
 public class AimLookAtRef : NetworkBehaviour
 {
     [SerializeField]
-    private RigBuilder _rig;
-    [SerializeField]
     private GameObject _lookAtObject;
     public override void OnStartClient()
     {
         base.OnStartClient();
         if (base.IsOwner)
         {
-            _rig.Build();
         }
         else
         {
