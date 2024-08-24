@@ -19,9 +19,9 @@ public class WeaponSpawnObject : NetworkBehaviour
         gameObject.GetComponent<WeaponSpawnObject>().enabled = false;
     }
 
-    public override void OnStartNetwork()
+    public override void OnStartServer()
     {
-        base.OnStartNetwork();
+        base.OnStartServer();
         StartSpawning();
     }
     
@@ -34,11 +34,14 @@ public class WeaponSpawnObject : NetworkBehaviour
     {
         while (true)
         {
-            var spawnPointNumber = Random.Range(0, spawnPoint.Count);
-            GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
-            ServerManager.Spawn(weaponSpawned);
-            weaponSpawned.GetComponent<WeaponPickups>().SetSpawnPoint(spawnPoint[spawnPointNumber]);
-            spawnPoint.RemoveAt(spawnPointNumber);
+            if (spawnPoint.Count>0)
+            {
+                var spawnPointNumber = Random.Range(0, spawnPoint.Count);
+                GameObject weaponSpawned = Instantiate(_objWeaponsToSpawn[Random.Range(0, _objWeaponsToSpawn.Length)], spawnPoint[spawnPointNumber].transform.position, Quaternion.identity);
+                ServerManager.Spawn(weaponSpawned);
+                weaponSpawned.GetComponent<WeaponPickups>().SetSpawnPoint(spawnPoint[spawnPointNumber]);
+                spawnPoint.RemoveAt(spawnPointNumber);
+            }
             yield return new WaitForSeconds(_spawnRate);
         }
     }
