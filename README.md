@@ -2,7 +2,7 @@
 
 ## Playing Movie
 
-[![CyBattle.png](CyBattle.png)](https://youtu.be/TzA0_sxzFTA)
+[![CyBattle.png](CyBattle.png)](https://youtu.be/CrcOHtCbKF8)
 
 ## Scripts Location
 Assets/Scripts
